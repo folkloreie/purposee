@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>to my dearest</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* Grey-light manly palette */
+    --bg1:#f3f4f6;
+    --bg2:#e7eaee;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:rgba(31,41,55,0.65);
+
+    --accent:#4b5563;          /* slate */
+    --accent2:#111827;         /* near-black for emphasis */
+    --border:rgba(17,24,39,0.12);
+
+    --chip:#f1f5f9;            /* light grey chip */
+    --chipBorder:rgba(17,24,39,0.10);
+
+    --shadow:0 14px 40px rgba(17,24,39,0.12);
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    padding:0;
+    font-family: "Roboto Mono", monospace;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--text);
+  }
+
+  .card{
+    width: min(90vw, 420px);
+    max-height: 86vh;
+    background: var(--card);
+    border-radius:16px;
+    box-shadow: var(--shadow);
+    padding:18px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    border: 1px solid var(--border);
+  }
+
+  .top{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 12px;
+    border-radius:14px;
+    background: linear-gradient(135deg, #1f2937, #111827);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  h1{font-size:1.05rem;margin:0;color:#f9fafb}
+  .hint{font-size:0.86rem;color:rgba(249,250,251,0.72)}
+
+  #controls{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    color:rgba(249,250,251,0.72);
+    font-size:0.85rem;
+  }
+
+  input[type="text"]{
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid rgba(17,24,39,0.16);
+    outline:none;
+    font-size:0.95rem;
+    width:100%;
+    box-sizing:border-box;
+    background:#f8fafc;
+    color:var(--text);
+  }
+  input[type="text"]::placeholder{color:rgba(31,41,55,0.45)}
+  input[type="text"]:focus{
+    border-color: rgba(17,24,39,0.35);
+    box-shadow: 0 0 0 3px rgba(17,24,39,0.08);
+  }
+
+  button{
+    background:var(--accent2);
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:0.95rem;
+    font-weight:700;
+  }
+  button.secondary{
+    background:transparent;
+    color:var(--accent2);
+    border:1px solid rgba(17,24,39,0.22);
+  }
+  button:disabled{opacity:0.6;cursor:not-allowed}
+
+  #message{
+    font-size:0.9rem;
+    min-height:18px;
+    color:var(--muted);
+  }
+
+  #letterBox{
+    background: #fbfbfc;
+    border-radius:12px;
+    padding:12px;
+    border:1px dashed rgba(17,24,39,0.18);
+    overflow:auto;
+    flex:1 1 auto;
+    min-height:160px;
+    white-space:pre-wrap;
+    color:var(--text);
+    font-size:1rem;
+  }
+
+  #letterInner{
+    line-height:1.6;
+    font-family: "Roboto Mono", monospace;
+    color: var(--text);
+    font-size: 1rem;
+  }
+
+  .small{font-size:0.85rem;color:var(--muted)}
+  .hidden{display:none}
+
+  .success {color: #1f7a50}
+  .error {color: #b4233a}
+
+  .response-buttons{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin-top:12px;
+    flex-wrap:wrap
+  }
+  .resp-btn{
+    background: var(--chip);
+    color: var(--accent2);
+    border-radius: 12px;
+    padding: 10px 16px;
+    border: 1px solid var(--chipBorder);
+    cursor:pointer;
+    font-family:"Roboto Mono", monospace;
+    font-weight:700;
+  }
+  .resp-btn:hover{
+    background:#e9eef5;
+    color:var(--accent2);
+  }
+</style>
+</head>
+
+<body>
+<div class="card" role="main" aria-labelledby="title">
+  <div class="top">
+    <div>
+      <h1 id="title">to my dearest</h1>
+      <div class="hint">what’s the name of Jeanest's crush?</div>
+    </div>
+    <div id="controls" class="small">Music: <span id="ms">off</span></div>
+  </div>
+
+  <div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input id="password" type="text" autocomplete="off" placeholder="hii, Bernaby..." aria-label="secret answer">
+      <button id="submitBtn">open letter</button>
+    </div>
+    <div id="message" aria-live="polite"></div>
+  </div>
+
+  <div id="letterBox" class="hidden" tabindex="0" aria-hidden="true">
+    <div id="letterInner" aria-live="polite"></div>
+  </div>
+
+  <div id="responseArea" class="hidden">
+    <div class="response-buttons hidden" id="responseButtons" aria-hidden="true">
+      <button id="yesBtn" class="resp-btn">yesss, i will!</button>
+      <button id="noBtn" class="resp-btn">noo, so sorry!</button>
+    </div>
+    <div class="response hidden" id="afterResponse"></div>
+    <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:8px;">
+      <button id="playMusicBtn" class="secondary hidden">▶ Play music</button>
+      <button id="pauseMusicBtn" class="secondary hidden">⏸ Pause</button>
+      <button id="openPlaylistBtn" class="hidden">Take me to our playlist</button>
+    </div>
+  </div>
+</div>
+
+<audio id="bgMusic" loop preload="auto">
+  <source src="audio.mp3" type="audio/mpeg">
+  Your browser does not support audio.
+</audio>
+
+<script>
+(function(){
+  const acceptedAnswers = new Set(["bernaby"]);
+  const spotifyUrl = "https://open.spotify.com/playlist/5EWjy71l30G9TAQeXIURuZ";
+  const letterContent =
+`dear Bernaby,
+ㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤ
+Its been a while since I get–to know you. And I think I need more time to learn, but I can't hide it. I can't hide my feelings for you anymore. I'm falling in love with you and I do, since the first time we met until now. You still catch my attention and I love it when I can spent my times with you lately. If you asked me "what I like about you?” I will definitely answer it with, I like you because its you. I'm falling in love with someone that can make me feel comfortable, you make me feel so special and all those little things that I will always remember. You're different from the other and I know I can treat you better than anyone. First of all, I wanna say thank you. For being born, thank you for letting me to get closer with you and I really appreciate every second and minute when I'm with you.
+
+Falling in love with you makes me grateful. Taking a chance on you makes me happy. Reaching this point with you moves me deeply. I remember how happy I was on our first day together, I couldn't stop smiling. Even now, I still smile constantly. I don't know why but when I'm with you, I can be my real self and I'm so interest to get to know you more deeper and deeper.  Thank you so much for giving me a chance, I would never throw this chance away. I hope, I'm not ruin our friendship for saying this but.. I beg for your nice answer after this.
+
+No need to be rush. I need you to know that I love you and I do. I hope you know how much you mean to me and I want to be selfish, I want you to be mine & only mine. So, may I grow alongside you & would you hold my hand?`;
+
+  const pw = document.getElementById('password');
+  const submitBtn = document.getElementById('submitBtn');
+  const msg = document.getElementById('message');
+  const letterBox = document.getElementById('letterBox');
+  const letterInner = document.getElementById('letterInner');
+  const bgMusic = document.getElementById('bgMusic');
+  const playMusicBtn = document.getElementById('playMusicBtn');
+  const pauseMusicBtn = document.getElementById('pauseMusicBtn');
+  const openPlaylistBtn = document.getElementById('openPlaylistBtn');
+  const ms = document.getElementById('ms');
+  const responseArea = document.getElementById('responseArea');
+  const responseButtons = document.getElementById('responseButtons');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const afterResponse = document.getElementById('afterResponse');
+
+  let unlocked=false;
+
+  function norm(s){ return (s||'').toString().trim().toLowerCase(); }
+  function flash(text,cls){
+    msg.textContent = text;
+    msg.className = cls === 'error' ? 'error' : (cls === 'success' ? 'success' : '');
+    setTimeout(()=>{ if(!unlocked) msg.textContent=''; }, 3000);
+  }
+
+  // Enter to submit
+  pw.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); submitBtn.click(); }});
+  submitBtn.addEventListener('click', function(){
+    if(unlocked) return;
+    const v = norm(pw.value);
+    if(!v){ flash("Please type the name.", "error"); pw.focus(); return; }
+    if(acceptedAnswers.has(v)){
+      unlocked = true;
+      flash("you’re so smartt! opening your letter...", "success");
+      pw.disabled = true; submitBtn.disabled = true;
+      openLetter();
+    } else {
+      flash("oopsiee, try again :(", "error"); pw.focus();
+    }
+  });
+
+  function openLetter(){
+    letterBox.classList.remove('hidden');
+    letterBox.setAttribute('aria-hidden','false');
+    letterInner.innerHTML = '';
+    tryPlayAndFade();
+
+    startTypewriter(letterContent, letterInner, letterBox, 65, ()=> {
+      responseArea.classList.remove('hidden');
+      responseButtons.classList.remove('hidden');
+      responseButtons.setAttribute('aria-hidden','false');
+      setTimeout(()=> {
+        playMusicBtn.classList.remove('hidden');
+        pauseMusicBtn.classList.remove('hidden');
+      }, 300);
+    });
+
+    setTimeout(()=> letterBox.focus(), 200);
+  }
+
+  // FIX: scroll goes to letterBox; also escape &,<,>
+  function startTypewriter(text, container, scroller, speed=100, callback){
+    let i=0;
+    function esc(ch){
+      if(ch === '&') return '&amp;';
+      if(ch === '<') return '&lt;';
+      if(ch === '>') return '&gt;';
+      return ch;
+    }
+    function step(){
+      if(i>=text.length){ if(typeof callback==='function') callback(); return; }
+      const ch = text.charAt(i++);
+      if(ch === '\n'){
+        container.innerHTML += '<br>';
+        if(text.charAt(i) === '\n'){ i++; container.innerHTML += '<br>'; }
+        scroller.scrollTop = scroller.scrollHeight;
+        setTimeout(step, speed*6);
+      } else {
+        container.innerHTML += esc(ch);
+        scroller.scrollTop = scroller.scrollHeight;
+        setTimeout(step, speed);
+      }
+    }
+    step();
+  }
+
+  function tryPlayAndFade(){
+    bgMusic.volume = 0;
+    const target = 0.28;
+    bgMusic.play().then(()=>{
+      ms.textContent = 'on';
+      fadeVolume(bgMusic, target, 1500);
+    }).catch(()=>{
+      ms.textContent = 'off';
+      playMusicBtn.classList.remove('hidden');
+      flash("If music doesn't start automatically, press Play music.", "");
+    });
+  }
+
+  function fadeVolume(audioElm, target, duration){
+    const steps = Math.max(6, Math.floor(duration / 60));
+    const step = (target - audioElm.volume) / steps;
+    let count = 0;
+    const iv = setInterval(()=>{
+      audioElm.volume = Math.min(target, audioElm.volume + step);
+      count++;
+      if(count >= steps || audioElm.volume >= target - 0.001){ clearInterval(iv); audioElm.volume = target; }
+    }, duration/steps);
+  }
+
+  playMusicBtn.addEventListener('click', ()=>{
+    bgMusic.play().then(()=>{ ms.textContent='on'; playMusicBtn.classList.add('hidden'); fadeVolume(bgMusic,0.28,1400);})
+    .catch(()=> flash("Unable to play audio. Your browser may restrict it.","error"));
+  });
+
+  pauseMusicBtn.addEventListener('click', ()=>{
+    if(bgMusic.paused){
+      bgMusic.play().then(()=> { ms.textContent='on'; }).catch(()=> flash("Can't play audio.","error"));
+    } else {
+      bgMusic.pause(); ms.textContent='off';
+    }
+  });
+
+  bgMusic.addEventListener('error', ()=>{
+    playMusicBtn.classList.remove('hidden');
+    ms.textContent = 'off';
+    flash("Music couldn't be loaded from audio.mp3. Make sure the file is in the same folder as this HTML.", "error");
+  });
+
+  // FIX: noBtn string closed properly
+  yesBtn.addEventListener('click', ()=> respond("yeayyy! i knew it. i can't wait to make more memories with you."));
+  noBtn.addEventListener('click', ()=> respond("it’s okay! I can understand."));
+
+  function respond(message){
+    responseButtons.classList.add('hidden');
+    responseButtons.setAttribute('aria-hidden','true');
+    afterResponse.classList.remove('hidden');
+    afterResponse.style.display = 'block';
+    afterResponse.textContent = message;
+    openPlaylistBtn.classList.remove('hidden');
+  }
+
+  // FIX: set playlist click once (no stacking)
+  openPlaylistBtn.addEventListener('click', ()=> { window.open(spotifyUrl,'_blank'); }, { once: true });
+
+  playMusicBtn.classList.add('hidden');
+  pauseMusicBtn.classList.add('hidden');
+  openPlaylistBtn.classList.add('hidden');
+})();
+</script>
+</body>
+</html>
